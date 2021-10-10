@@ -32,8 +32,8 @@
 *.dSYM/
 *.su
 
-cmocka/
 obj/
+test/test_tmp101
 
 *.db
 *.db-wal

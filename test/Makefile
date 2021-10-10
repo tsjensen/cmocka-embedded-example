@@ -1,13 +1,13 @@
 vpath %.c ../src
 
 INCLUDE_DIRS = -I../src
-INCLUDE_DIRS += -I$(CMOCKA_DIR)/include
+#INCLUDE_DIRS += -I$(CMOCKA_DIR)/include
 
 CFLAGS	= $(INCLUDE_DIRS)
 
 MOCKS = i2c_read_blocking i2c_transmit_blocking
-LDFLAGS	= -L$(CMOCKA_DIR)/build/src -Wl,-rpath=$(CMOCKA_DIR)/build/src 
-LDFLAGS += $(foreach MOCK,$(MOCKS),-Wl,--wrap=$(MOCK))
+#LDFLAGS	= -L$(CMOCKA_DIR)/build/src -Wl,-rpath=$(CMOCKA_DIR)/build/src 
+LDFLAGS = $(foreach MOCK,$(MOCKS),-Wl,--wrap=$(MOCK))
 LDFLAGS += -lcmocka
 
 TARGET = test_tmp101
@@ -19,10 +19,11 @@ SRC_OBJ = $(patsubst %.c,obj/%.o,$(SRC))
 TEST_OBJ = $(patsubst %.c,obj/%.o,$(TEST_SRC)) 
 OBJ_DIR = obj
 
-CMOCKA_TAR = cmocka-1.1.0.tar.xz
-CMOCKA_DIR = cmocka
+#CMOCKA_TAR = cmocka-1.1.0.tar.xz
+#CMOCKA_DIR = cmocka
 
-all: $(CMOCKA_DIR) $(TARGET)
+#all: $(CMOCKA_DIR) $(TARGET)
+all: $(TARGET)
 	./$(TARGET)
 
 $(SRC_OBJ): | $(OBJ_DIR)
@@ -37,11 +38,11 @@ $(OBJ_DIR)/%.o : %.c
 $(TARGET):  $(SRC_OBJ) $(TEST_OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-$(CMOCKA_DIR):
-	mkdir -p $@
-	tar -xf $(CMOCKA_TAR) -C $@ --strip-components 1
-	mkdir -p $@/build
-	@(cd $@/build && cmake ../ && make -s)
+#$(CMOCKA_DIR):
+#	mkdir -p $@
+#	tar -xf $(CMOCKA_TAR) -C $@ --strip-components 1
+#	mkdir -p $@/build
+#	@(cd $@/build && cmake ../ && make -s)
 
 clean:
 	rm -rf $(TARGET) $(OBJ_DIR) $(CMOCKA_DIR)
